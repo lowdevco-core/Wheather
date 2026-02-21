@@ -1,153 +1,242 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
-    <link rel="icon" href="./assets/resources/icon/weather-code/cloudy.png">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="icon" href="./assets/resources/icon/">
-</head>
+    <link rel="icon" href="./assets/resources/icon/weather-code/cloudy.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
 
-<body class="h-[100vh]  p-12">
-    <div class="bg-transparent backdrop-blur-lg shadow-2xl h-208 rounded-3xl p-25 border border-white/30 shadow-inner">
-        <div class="flex gap-15">
-            <div
-                class="bg-transparent w-250 h-100 rounded-3xl border border-white/50 backdrop-blur-3xl p-7 shadow-inner shadow-2xl">
-                <div class="flex">
-                    <div class="p-3 text-white w-full flex items-center">
-                        <div>
-                            <div>
-                                <img src="./assets/resources/icon/weather-code/sunny.png" class="w-50 h-50 weather-icon"
-                                    alt="weather" id="weather-code">
-                            </div>
-                            <div>
-                                <h1 id="temprature" class="text-6xl font-bold ">28 C</h1>
-                                <h3 id="place" class="text-lg">kochi,india</h3>
-                                <h3 id="weather-code" class="text-lg">Thunder Storm</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-3 text-white w-full flex items-center justify-center">
-                        <div>
-                            <h2 id="Windspeed" class="text-4xl font-bold">Windspeed: 25km/h</h2>
-                            <h2 id="Humidity" class="text-4xl font-bold">Humidity : 85%</h2>
-                        </div>
-                    </div>
-                </div>
+  <body
+    class="min-h-screen text-white p-4 sm:p-8 flex items-center justify-center"
+  >
+    <div
+      class="w-full max-w-[90rem] mx-auto bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-6 sm:p-12 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex flex-col gap-8 sm:gap-10"
+    >
+      <div class="flex flex-col xl:flex-row gap-8 sm:gap-10 w-full">
+        <div
+          class="flex-1 bg-white/10 backdrop-blur-xl border border-white/20 rounded-[2rem] p-6 sm:p-10 shadow-[inset_0_0_20px_rgba(255,255,255,0.05)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 overflow-hidden"
+        >
+          <div
+            class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6 flex-1 min-w-0 w-full"
+          >
+            <img
+              src="./assets/resources/icon/weather-code/sunny.png"
+              class="w-24 h-24 sm:w-36 sm:h-36 object-contain drop-shadow-lg shrink-0"
+              alt="weather"
+              id="weather-code"
+            />
+            <div class="flex flex-col justify-center min-w-0">
+              <h1
+                id="temprature"
+                class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-2 truncate"
+              >
+                28°C
+              </h1>
+              <h3
+                id="place"
+                class="text-xl sm:text-2xl lg:text-3xl font-light opacity-90 truncate"
+              >
+                Kochi, India
+              </h3>
+              <h3
+                id="weather-code"
+                class="text-lg sm:text-xl font-medium opacity-80 mt-1 truncate"
+              >
+                Thunder Storm
+              </h3>
             </div>
-            <div
-                class="bg-transparent w-150 h-100 rounded-3xl border border-white/50 text-white p-7 shadow-inner shadow-2xl">
-                <div
-                    class="bg-transparent w-full rounded-3xl h-15 mb-5 border border-white/50 flex shadow-inner shadow-2xl">
-                    <input id="user-input" type="text" placeholder="Search City.."
-                        class="w-full focus:outline-none focus:ring-0 focus:border-none p-3">
-                    <button id="input-submit-btn" class="w-30" type="submit">search</button>
-                </div>
-                <div class="border border-white/20 backdrop-blur-3xl h-65 rounded-2xl" id="place-suggestion">
+          </div>
 
-                </div>
-            </div>
+          <div
+            class="flex flex-col items-center md:items-end gap-3 w-full md:w-auto min-w-max border-t border-white/10 pt-6 md:pt-0 md:border-t-0 md:border-l md:pl-8 shrink-0"
+          >
+            <h2
+              id="Windspeed"
+              class="text-xl sm:text-2xl lg:text-3xl font-semibold"
+            >
+              Wind: 25 km/h
+            </h2>
+            <h2
+              id="Humidity"
+              class="text-xl sm:text-2xl lg:text-3xl font-semibold"
+            >
+              Humidity: 85%
+            </h2>
+          </div>
+        </div>
+
+        <div
+          class="w-full xl:w-[450px] shrink-0 bg-white/10 backdrop-blur-xl border border-white/20 rounded-[2rem] p-6 sm:p-10 shadow-[inset_0_0_20px_rgba(255,255,255,0.05)] flex flex-col gap-6 overflow-hidden"
+        >
+          <div
+            class="bg-black/20 focus-within:bg-transparent border border-white/20 rounded-2xl flex items-center p-2 focus-within:border-white/60 transition-all duration-300 shadow-inner"
+          >
+            <input
+              id="user-input"
+              type="text"
+              placeholder="Search City..."
+              class="w-full bg-transparent border-none outline-none text-white placeholder-white/60 px-4 py-3 text-lg sm:text-xl"
+            />
+            <button
+              id="input-submit-btn"
+              class="bg-white/20 hover:bg-white/30 text-white px-6 sm:px-8 py-3 rounded-xl transition font-medium backdrop-blur-md text-lg"
+              type="submit"
+            >
+              Search
+            </button>
+          </div>
+
+          <div
+            class="flex-1 overflow-y-auto max-h-48 sm:max-h-64 custom-scrollbar rounded-xl pr-3"
+            id="place-suggestion"
+          ></div>
+        </div>
+      </div>
+
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-4 sm:gap-6 w-full bg-white/5 backdrop-blur-lg border border-white/10 rounded-[2rem] p-6 sm:p-8 shadow-inner overflow-hidden"
+      >
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/day.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Date
+          </h2>
         </div>
         <div
-            class="bg-transparent w-full mt-10 h-50 rounded-4xl p-5 flex gap-5 border border-white/50 text-white shadow-inner">
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/day.png" class="w-15 h-15 flex items-center"
-                            alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">day</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/air.png" class="w-15 h-15 flex items-center"
-                            alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">Air</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/moisturizer.png"
-                            class="w-15 h-15 flex items-center" alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">moisture</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/wawes.png" class="w-15 h-15 flex items-center"
-                            alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">wave</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/uv-light.png" class="w-15 h-15 flex items-center"
-                            alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">uv</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/wind.png" class="w-15 h-15 flex items-center"
-                            alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">wind</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/pressure.png" class="w-15 h-15 flex items-center"
-                            alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">pressure</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/visiblity.png"
-                            class="w-15 h-15 flex items-center" alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">visiblity</h2>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="bg-transparent w-full rounded-3xl h-full border border-white/50 p-1 flex items-center justify-center shadow-inner shadow-2xl">
-                <div>
-                    <div><img src="./assets/resources/icon/fixed-icons/weather.png" class="w-15 h-15 flex items-center"
-                            alt=""></div>
-                    <div>
-                        <h2 id="day" class="mt-5">weather</h2>
-                    </div>
-                </div>
-            </div>
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/air.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Air
+          </h2>
         </div>
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/moisturizer.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Moisture
+          </h2>
+        </div>
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/wawes.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Wave
+          </h2>
+        </div>
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/uv-light.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            UV
+          </h2>
+        </div>
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/wind.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Wind
+          </h2>
+        </div>
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/pressure.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Pressure
+          </h2>
+        </div>
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/visiblity.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Visibility
+          </h2>
+        </div>
+        <div
+          class="bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-h-[120px] flex flex-col items-center justify-center gap-3 transition duration-300 shadow-sm"
+        >
+          <img
+            src="./assets/resources/icon/fixed-icons/weather.png"
+            class="w-10 h-10 object-contain drop-shadow-md"
+            alt=""
+          />
+          <h2
+            id="day"
+            class="text-sm sm:text-base font-medium text-center break-words w-full"
+          >
+            Weather
+          </h2>
+        </div>
+      </div>
     </div>
 
-
     <script src="./assets/java-script/script.js"></script>
-</body>
-
+  </body>
 </html>
