@@ -1,19 +1,31 @@
-// DOM Elements
-
+// DOM references
 const inputEl = document.getElementById("user-input");
 const submitBtn = document.getElementById("input-submit-btn");
 const suggestionBox = document.getElementById("place-suggestion");
 const tempEl = document.getElementById("temprature");
 const placeEl = document.getElementById("place");
 const weatherElsAll = Array.from(
-  document.querySelectorAll('[id="weather-code"]'),
+  document.querySelectorAll(".weather-update-field")
 );
 const windBigEl = document.getElementById("Windspeed");
 const humidityBigEl = document.getElementById("Humidity");
-const tiles = Array.from(document.querySelectorAll('[id="day"]'));
+const tiles = Array.from(document.querySelectorAll(".metric-value"));
+const toastContainer = document.getElementById("toast-container");
 
-// API's
+// Toast notification system — replaces native alert()
+function showToast(message, type = "info", duration = 3500) {
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
 
+  setTimeout(() => {
+    toast.classList.add("toast-exit");
+    toast.addEventListener("animationend", () => toast.remove());
+  }, duration);
+}
+
+// Weather forecast API
 async function fetchForecast(lat, lon) {
   const hourly = [
     "temperature_2m",
@@ -34,8 +46,7 @@ async function fetchForecast(lat, lon) {
   return r.json();
 }
 
-// Air API
-
+// Air quality API
 async function fetchAirQuality(lat, lon) {
   const hourly = ["pm2_5", "pm10", "nitrogen_dioxide", "ozone"].join(",");
   const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&hourly=${hourly}&timezone=auto`;
@@ -44,8 +55,7 @@ async function fetchAirQuality(lat, lon) {
   return r.json();
 }
 
-// Waves API
-
+// Marine / wave API
 async function fetchMarine(lat, lon) {
   const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&hourly=wave_height&timezone=auto`;
   const r = await fetch(url);
@@ -53,8 +63,7 @@ async function fetchMarine(lat, lon) {
   return r.json();
 }
 
-// Geo location finding
-
+// Geocoding API
 async function geocodeCity(q) {
   const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=6&language=en`;
   const res = await fetch(url);
@@ -62,6 +71,7 @@ async function geocodeCity(q) {
   return res.json();
 }
 
+// Weather code → human-readable text
 function weatherCodeToText(code) {
   const map = {
     0: "Clear sky",
@@ -89,6 +99,7 @@ function weatherCodeToText(code) {
   return map[code] || "Unknown";
 }
 
+// Weather code → emoji
 function weatherCodeToEmoji(code) {
   if (code === 0) return "☀️";
   if (code >= 1 && code <= 3) return "⛅";
@@ -104,6 +115,7 @@ function setText(el, value) {
   el.textContent = value;
 }
 
+// Convert emoji to SVG data URI for img src
 function emojiToDataUri(emoji, size = 96) {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'>
     <text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='${Math.round(size * 0.6)}'>${emoji}</text>
@@ -111,60 +123,72 @@ function emojiToDataUri(emoji, size = 96) {
   return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
-// UI suggestions
-
+// Clear suggestion list
 function clearSuggestions() {
   suggestionBox.innerHTML = "";
 }
 
+// Render suggestion buttons
 function showSuggestions(results) {
   clearSuggestions();
+
   if (!results || !results.length) {
-    suggestionBox.innerHTML =
-      '<div class="p-3 text-sm text-gray-400">No places found</div>';
+    const msg = document.createElement("div");
+    msg.className = "no-results";
+    msg.textContent = "No places found";
+    suggestionBox.appendChild(msg);
     return;
   }
-  const box = document.createElement("div");
-  box.className = "p-2";
+
   results.forEach((place) => {
     const btn = document.createElement("button");
-    btn.className =
-      "block w-full text-left px-3 py-2 hover:bg-slate-800 rounded text-white";
+    btn.className = "suggestion-item";
     btn.textContent = `${place.name}${place.admin1 ? ", " + place.admin1 : ""}${place.country ? " (" + place.country + ")" : ""}`;
     btn.addEventListener("click", () => {
       clearSuggestions();
       inputEl.value = `${place.name}${place.country ? ", " + place.country : ""}`;
       loadWeatherFor(place.latitude, place.longitude, place);
     });
-    box.appendChild(btn);
+    suggestionBox.appendChild(btn);
   });
-  suggestionBox.appendChild(box);
 }
 
-// search
-
+// Search handler — toast instead of alert
 async function onSearch() {
   const q = inputEl.value.trim();
-  if (!q) return alert("Type a city name to search.");
+
+  if (!q) {
+    showToast("Type a city name to search.", "warning");
+    return;
+  }
 
   clearSuggestions();
-  suggestionBox.textContent = "Searching...";
+  const loadingMsg = document.createElement("div");
+  loadingMsg.className = "loading-text";
+  loadingMsg.textContent = "Searching…";
+  suggestionBox.appendChild(loadingMsg);
 
   setText(tempEl, "Loading…");
   setText(placeEl, "…");
 
   try {
     const geo = await geocodeCity(q);
+
     if (!geo || !geo.results || geo.results.length === 0) {
-      suggestionBox.textContent = "No places found.";
+      clearSuggestions();
+      const msg = document.createElement("div");
+      msg.className = "no-results";
+      msg.textContent = "No places found.";
+      suggestionBox.appendChild(msg);
       setText(tempEl, "N/A");
       return;
     }
+
     if (geo.results.length === 1) {
       loadWeatherFor(
         geo.results[0].latitude,
         geo.results[0].longitude,
-        geo.results[0],
+        geo.results[0]
       );
       clearSuggestions();
     } else {
@@ -172,21 +196,22 @@ async function onSearch() {
     }
   } catch (err) {
     console.error(err);
-    suggestionBox.textContent = "Search failed. Check console.";
+    clearSuggestions();
+    showToast("Search failed. Please try again.", "error");
     setText(tempEl, "Error");
   }
 }
 
+// Load weather data and populate the UI
 async function loadWeatherFor(lat, lon, placeMeta = {}) {
   setText(
     placeEl,
-    `${placeMeta.name ?? "Location"}, ${placeMeta.country ?? ""}`,
+    `${placeMeta.name ?? "Location"}, ${placeMeta.country ?? ""}`
   );
   setText(tempEl, "Loading…");
-  setText(windBigEl, "Windspeed: —");
-  setText(humidityBigEl, "Humidity : —");
+  setText(windBigEl, "Wind: —");
+  setText(humidityBigEl, "Humidity: —");
 
-  // parallel fetch
   try {
     const [forecast, air, marine] = await Promise.all([
       fetchForecast(lat, lon).catch((e) => {
@@ -235,16 +260,15 @@ async function loadWeatherFor(lat, lon, placeMeta = {}) {
     const wave = marine?.hourly?.wave_height?.[0] ?? null;
     const aqiPm25 = air?.hourly?.pm2_5?.[0] ?? null;
 
-    // placeholders
-
+    // Update hero section
     setText(tempEl, curTemp !== null ? `${curTemp} °C` : "N/A");
     setText(
       windBigEl,
-      `Windspeed: ${curWind !== null ? curWind + " km/h" : "N/A"}`,
+      `Wind: ${curWind !== null ? curWind + " km/h" : "N/A"}`
     );
     setText(
       humidityBigEl,
-      `Humidity : ${humidity !== null ? humidity + "%" : "N/A"}`,
+      `Humidity: ${humidity !== null ? humidity + "%" : "N/A"}`
     );
 
     const weatherText = weatherCodeToText(curCode);
@@ -258,34 +282,35 @@ async function loadWeatherFor(lat, lon, placeMeta = {}) {
       }
     });
 
+    // Update metric tiles
     const tileValues = [
       curTime ? curTime.split("T")[0] : (forecast?.daily?.time?.[0] ?? "N/A"),
-      aqiPm25 !== null ? `PM2.5: ${aqiPm25}` : "Air: N/A",
-      soil !== null ? `${soil}` : "Moisture: N/A",
-      wave !== null ? `${wave} m` : "Wave: N/A",
-      uv !== 0 ? `${uv}` : "UV: N/A",
-      curWind !== null ? `${curWind} km/h` : "Wind: N/A",
-      pressure !== null ? `${pressure} hPa` : "Pressure: N/A",
-      visibility !== null ? `${visibility} m` : "Visibility: N/A",
+      aqiPm25 !== null ? `PM2.5: ${aqiPm25}` : "N/A",
+      soil !== null ? `${soil}` : "N/A",
+      wave !== null ? `${wave} m` : "N/A",
+      uv !== 0 ? `${uv}` : "N/A",
+      curWind !== null ? `${curWind} km/h` : "N/A",
+      pressure !== null ? `${pressure} hPa` : "N/A",
+      visibility !== null ? `${visibility} m` : "N/A",
       weatherText,
     ];
 
     tiles.forEach((tileEl, i) => setText(tileEl, tileValues[i] ?? "—"));
   } catch (err) {
     console.error("Failed to load weather:", err);
+    showToast("Failed to load weather data.", "error");
     setText(tempEl, "Error");
-
     tiles.forEach((t, i) => setText(t, i === 0 ? "Error" : "N/A"));
   }
 }
 
+// Event listeners
 submitBtn.addEventListener("click", onSearch);
 inputEl.addEventListener("keydown", (e) => {
   if (e.key === "Enter") onSearch();
 });
 
-// placeholders
-
+// Initial placeholder state
 setText(tempEl, "—");
 setText(placeEl, "—");
 tiles.forEach((t) => setText(t, "—"));
