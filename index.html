@@ -5,104 +5,160 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Modern weather app with real-time forecasts, air quality, UV index, and more." />
-  <title>Weather App</title>
-  <link rel="icon" href="./assets/resources/icon/weather-code/cloudy.png" />
+  <title>Skies</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/css/style.css" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
 </head>
 
-<body>
-  <!-- Ambient background glow blobs -->
-  <div class="bg-glow bg-glow-1"></div>
-  <div class="bg-glow bg-glow-2"></div>
+<body id="app-body">
 
-  <!-- Toast container for notifications -->
   <div id="toast-container" class="toast-container"></div>
 
-  <div class="app-shell">
-    <!-- Hero + Search row -->
-    <div class="top-row">
-      <!-- Current weather card -->
-      <section class="weather-hero">
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand">
+          <i data-lucide="cloud" class="brand-icon"></i>
+          <span class="brand-name">Skies</span>
+        </div>
+
+        <div class="search-wrap">
+          <div class="search-bar">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input id="user-input" type="text" placeholder="Search city..." autocomplete="off" />
+          </div>
+          <button id="input-submit-btn" class="search-btn" type="button">
+            <i data-lucide="search" class="btn-icon"></i>
+            Search
+          </button>
+          <div class="suggestions" id="place-suggestion"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-stats">
+        <div class="sidebar-stat">
+          <i data-lucide="wind" class="sstat-icon"></i>
+          <div class="sstat-body">
+            <span class="sstat-label">Wind</span>
+            <span id="wind-speed" class="sstat-value">--</span>
+          </div>
+        </div>
+        <div class="sidebar-stat">
+          <i data-lucide="droplets" class="sstat-icon"></i>
+          <div class="sstat-body">
+            <span class="sstat-label">Humidity</span>
+            <span id="humidity" class="sstat-value">--</span>
+          </div>
+        </div>
+        <div class="sidebar-stat">
+          <i data-lucide="sunrise" class="sstat-icon"></i>
+          <div class="sstat-body">
+            <span class="sstat-label">Sunrise</span>
+            <span id="sunrise" class="sstat-value">--</span>
+          </div>
+        </div>
+        <div class="sidebar-stat">
+          <i data-lucide="sunset" class="sstat-icon"></i>
+          <div class="sstat-body">
+            <span class="sstat-label">Sunset</span>
+            <span id="sunset" class="sstat-value">--</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="hero-card" id="hero-card">
         <div class="hero-left">
-          <img src="./assets/resources/icon/weather-code/sunny.png" alt="Current weather"
-            class="hero-icon weather-update-field" />
-          <div class="hero-info">
-            <h1 id="temprature" class="hero-temp">—</h1>
-            <h2 id="place" class="hero-place">—</h2>
-            <p class="hero-condition weather-update-field">—</p>
+          <div class="hero-icon-wrap" id="hero-icon-wrap">
+            <i data-lucide="sun" class="hero-icon"></i>
+          </div>
+          <div class="hero-meta">
+            <p id="hero-date" class="hero-date">--</p>
+            <h2 id="place" class="hero-place">Search a city</h2>
+            <p id="condition" class="hero-condition">--</p>
           </div>
         </div>
         <div class="hero-right">
-          <span id="Windspeed" class="hero-stat">Wind: —</span>
-          <span id="Humidity" class="hero-stat">Humidity: —</span>
+          <h1 id="temperature" class="hero-temp">--</h1>
+          <span class="hero-unit">°C</span>
+        </div>
+      </header>
+
+      <section class="metrics-row">
+        <div class="metric-card">
+          <i data-lucide="gauge" class="mc-icon text-emerald"></i>
+          <span class="mc-label">Air Quality</span>
+          <span id="m-air" class="mc-value">--</span>
+        </div>
+        <div class="metric-card">
+          <i data-lucide="sun-medium" class="mc-icon text-amber"></i>
+          <span class="mc-label">UV Index</span>
+          <span id="m-uv" class="mc-value">--</span>
+        </div>
+        <div class="metric-card">
+          <i data-lucide="thermometer" class="mc-icon text-rose"></i>
+          <span class="mc-label">Feels Like</span>
+          <span id="m-feels" class="mc-value">--</span>
+        </div>
+        <div class="metric-card">
+          <i data-lucide="activity" class="mc-icon text-sky"></i>
+          <span class="mc-label">Pressure</span>
+          <span id="m-pressure" class="mc-value">--</span>
+        </div>
+        <div class="metric-card">
+          <i data-lucide="eye" class="mc-icon text-violet"></i>
+          <span class="mc-label">Visibility</span>
+          <span id="m-visibility" class="mc-value">--</span>
+        </div>
+        <div class="metric-card">
+          <i data-lucide="droplets" class="mc-icon text-cyan"></i>
+          <span class="mc-label">Moisture</span>
+          <span id="m-moisture" class="mc-value">--</span>
+        </div>
+        <div class="metric-card">
+          <i data-lucide="waves" class="mc-icon text-blue"></i>
+          <span class="mc-label">Wave Height</span>
+          <span id="m-wave" class="mc-value">--</span>
+        </div>
+        <div class="metric-card">
+          <i data-lucide="navigation" class="mc-icon text-teal"></i>
+          <span class="mc-label">Wind Dir.</span>
+          <span id="m-wind-dir" class="mc-value">--</span>
         </div>
       </section>
 
-      <!-- Search panel -->
-      <aside class="search-panel">
-        <div class="search-bar">
-          <!-- Premium search SVG icon -->
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input id="user-input" type="text" placeholder="Search city…" />
-          <button id="input-submit-btn" class="search-btn" type="submit">
-            Search
-          </button>
+      <section class="forecast-block">
+        <div class="block-header">
+          <i data-lucide="clock-3" class="block-header-icon"></i>
+          <h3 class="block-title">Hourly</h3>
         </div>
-        <div class="suggestions" id="place-suggestion"></div>
-      </aside>
-    </div>
+        <div class="hourly-scroll" id="hourly-scroll">
+          <p class="empty-state">Search a city to see the hourly forecast</p>
+        </div>
+      </section>
 
-    <!-- Metrics tiles -->
-    <section class="metrics-grid">
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/day.png" alt="Date" />
-        <span class="metric-label">Date</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/air.png" alt="Air quality" />
-        <span class="metric-label">Air</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/moisturizer.png" alt="Moisture" />
-        <span class="metric-label">Moisture</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/wawes.png" alt="Wave height" />
-        <span class="metric-label">Wave</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/uv-light.png" alt="UV index" />
-        <span class="metric-label">UV</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/wind.png" alt="Wind speed" />
-        <span class="metric-label">Wind</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/pressure.png" alt="Pressure" />
-        <span class="metric-label">Pressure</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/visiblity.png" alt="Visibility" />
-        <span class="metric-label">Visibility</span>
-        <span class="metric-value">—</span>
-      </div>
-      <div class="metric-tile">
-        <img src="./assets/resources/icon/fixed-icons/weather.png" alt="Weather" />
-        <span class="metric-label">Weather</span>
-        <span class="metric-value">—</span>
-      </div>
-    </section>
+      <section class="forecast-block">
+        <div class="block-header">
+          <i data-lucide="calendar-days" class="block-header-icon"></i>
+          <h3 class="block-title">7-Day Forecast</h3>
+        </div>
+        <div class="daily-grid" id="daily-grid">
+          <p class="empty-state">Search a city to see the weekly forecast</p>
+        </div>
+      </section>
+
+    </main>
   </div>
 
   <script src="./assets/java-script/script.js"></script>
